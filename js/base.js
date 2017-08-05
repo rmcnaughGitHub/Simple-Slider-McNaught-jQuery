@@ -1,24 +1,33 @@
+//Module Pattern 
+
 $(document).ready(function(){
 
     'use strict'
 
     var run = {
 
-        //VAR settings for slider
-        width : $('#slider ul li').width(),
-        animationSpeed : 700,
-        pause : 900,
+        animationSpeed : 500,
+        pause : 2000,
         currentSlide : 1,
         interval: 0,
+        //Cache Dom
+        /*duplicates first 
+        <li class=" slide1"><li>*/
+        $newSlide : $('#slider ul li:eq(0)').clone().appendTo( $('#slider ul') ),
+        width : $('#slider ul li').width(),
         $slides: $('.slides'),//<ul> class
         $slide: $('.slide'),//<li> class
         $button_prev: $('.button_prev'),
         $button_next: $('.button_next'),
 
         init: function(){
-            //run.startSlider();
-            //run.$slides.on('mouseenter', run.pauseSlider).on('mouseleave', run.startSlider);
-            run.eventListeners();
+            this.eventListeners();    
+        },
+
+
+        addDomElement: function(objectToClone, placeNewObject, callBack){
+            objectToClone.clone().appendTo(placeNewObject);
+            console.log('Dom Element ',objectToClone, ' Position ',placeNewObject);
         },
 
         startSlider: function() {
@@ -30,7 +39,7 @@ $(document).ready(function(){
                     }
                 });
                 }, run.pause);
-            console.log('');
+            console.log('$slide.length ',run.$slide.length);
         },
 
         pauseSlider: function() {
@@ -48,7 +57,7 @@ $(document).ready(function(){
         },
 
         moveLeft: function(){
-            clearInterval(run.interval);
+            run.pauseSlider;
             if (run.currentSlide === 1) {
                 run.currentSlide = run.$slide.length;
                 run.$slides.css({'margin-left': '-' + run.width * (run.$slide.length - 1) + 'px'});
@@ -60,10 +69,11 @@ $(document).ready(function(){
                     run.currentSlide--;
                 });
             }
+            console.log('CurrentSlide ',run.currentSlide);
         },
 
         moveRight: function(){
-            clearInterval(run.interval);
+            run.pauseSlider;
             run.$slides.animate({'margin-left': '-='+run.width}, run.animationSpeed, function() {
                 if (++run.currentSlide === run.$slide.length) {
                     run.currentSlide = 1;
